@@ -40,10 +40,47 @@ class GeneralItemTest(unittest.TestCase):
 
 
 class AgedBrieTest(unittest.TestCase):
+    ENHANCE_BY = 1
+
     def setUp(self) -> None:
-        self.item = Item("Aged Brie", sell_in=-1, quality=50)
+        self.item = Item("Aged Brie", sell_in=2, quality=0)
         self.gilded_rose = GildedRose([self.item])
 
-    def test_aged_brie_quality_hit_max(self):
+    def test_increase_quality_when_day_passes(self):
+        yesterday_quality = self.item.quality
+        self.gilded_rose.update_quality()
+        self.assertEqual(self.item.quality, yesterday_quality + self.ENHANCE_BY)
+
+    def test_increase_twice_as_fast_when_sell_by_passes(self):
+        self.item.sell_in = 0
+        quality_after_sell_deadline = self.item.quality
+
+        self.gilded_rose.update_quality()
+        self.assertEqual(
+            self.item.quality,
+            quality_after_sell_deadline + (self.ENHANCE_BY * 2)
+        )
+
+    def test_quality_never_more_than_50_even_after_sell_in(self):
+        self.item.sell_in = -1
+
+        self.item.quality = 48
         self.gilded_rose.update_quality()
         self.assertEqual(self.item.quality, 50)
+
+        self.item.quality = 49
+        self.gilded_rose.update_quality()
+        self.assertEqual(self.item.quality, 50)
+
+    def test_quality_never_more_than_50(self):
+        max_quality = 50
+        self.item.quality = max_quality - 1
+
+        self.gilded_rose.update_quality()
+        self.assertEqual(self.item.quality, max_quality)
+
+        self.gilded_rose.update_quality()
+        self.assertEqual(self.item.quality, max_quality)
+
+        self.gilded_rose.update_quality()
+        self.assertEqual(self.item.quality, max_quality)
