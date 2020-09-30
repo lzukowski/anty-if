@@ -21,29 +21,49 @@ class GildedRose:
                 item.name != "Aged Brie"
                 and item.name != "Backstage passes to a TAFKAL80ETC concert"
             ):
-                if item.quality > 0:
+                if self._quality_more_then_0(item):
                     if item.name != "Sulfuras, Hand of Ragnaros":
-                        item.quality = item.quality - 1
+                        self._decrease_quality(item)
             else:
-                if item.quality < 50:
-                    item.quality = item.quality + 1
+                if self._quality_less_than_50(item):
+                    self._increase_quality(item)
                     if item.name == "Backstage passes to a TAFKAL80ETC concert":
                         if item.sell_in < 11:
-                            if item.quality < 50:
-                                item.quality = item.quality + 1
+                            if self._quality_less_than_50(item):
+                                self._increase_quality(item)
                         if item.sell_in < 6:
-                            if item.quality < 50:
-                                item.quality = item.quality + 1
+                            if self._quality_less_than_50(item):
+                                self._increase_quality(item)
             if item.name != "Sulfuras, Hand of Ragnaros":
                 item.sell_in = item.sell_in - 1
             if item.sell_in < 0:
                 if item.name != "Aged Brie":
                     if item.name != "Backstage passes to a TAFKAL80ETC concert":
-                        if item.quality > 0:
+                        if self._quality_more_then_0(item):
                             if item.name != "Sulfuras, Hand of Ragnaros":
-                                item.quality = item.quality - 1
+                                self._decrease_quality(item)
                     else:
-                        item.quality = item.quality - item.quality
+                        self._quality_to_zero(item)
                 else:
-                    if item.quality < 50:
-                        item.quality = item.quality + 1
+                    if self._quality_less_than_50(item):
+                        self._increase_quality(item)
+
+    @staticmethod
+    def _quality_to_zero(item):
+        item.quality = item.quality - item.quality
+
+    @staticmethod
+    def _quality_more_then_0(item: Item) -> bool:
+        return item.quality > 0
+
+    @staticmethod
+    def _quality_less_than_50(item: Item) -> bool:
+        return item.quality < 50
+
+    @staticmethod
+    def _increase_quality(item: Item) -> None:
+        item.quality = item.quality + 1
+
+    @staticmethod
+    def _decrease_quality(item: Item) -> None:
+        item.quality = item.quality - 1
