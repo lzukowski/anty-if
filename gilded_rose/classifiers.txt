@@ -1,0 +1,7 @@
+Development Status :: 1 - Planning
+Environment :: Console
+Intended Audience :: Education
+Operating System :: POSIX
+Natural Language :: English
+Programming Language :: Python :: 3.8
+Topic :: Software Development
