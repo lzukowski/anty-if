@@ -17,36 +17,45 @@ class GildedRose:
 
     def update_quality(self) -> None:
         for item in self.items:
-            if (
-                item.name != "Aged Brie"
-                and item.name != "Backstage passes to a TAFKAL80ETC concert"
-            ):
+            if not self._aged_brie(item) and not self._backstage_pass(item):
                 if self._quality_more_then_0(item):
-                    if item.name != "Sulfuras, Hand of Ragnaros":
+                    if not self._sulfuras(item):
                         self._decrease_quality(item)
             else:
                 if self._quality_less_than_50(item):
                     self._increase_quality(item)
-                    if item.name == "Backstage passes to a TAFKAL80ETC concert":
+                    if self._backstage_pass(item):
                         if item.sell_in < 11:
                             if self._quality_less_than_50(item):
                                 self._increase_quality(item)
                         if item.sell_in < 6:
                             if self._quality_less_than_50(item):
                                 self._increase_quality(item)
-            if item.name != "Sulfuras, Hand of Ragnaros":
+            if not self._sulfuras(item):
                 item.sell_in = item.sell_in - 1
             if item.sell_in < 0:
-                if item.name != "Aged Brie":
-                    if item.name != "Backstage passes to a TAFKAL80ETC concert":
+                if not self._aged_brie(item):
+                    if not self._backstage_pass(item):
                         if self._quality_more_then_0(item):
-                            if item.name != "Sulfuras, Hand of Ragnaros":
+                            if not self._sulfuras(item):
                                 self._decrease_quality(item)
                     else:
                         self._quality_to_zero(item)
                 else:
                     if self._quality_less_than_50(item):
                         self._increase_quality(item)
+
+    @staticmethod
+    def _aged_brie(item: Item) -> bool:
+        return item.name == "Aged Brie"
+
+    @staticmethod
+    def _backstage_pass(item: Item) -> bool:
+        return item.name == "Backstage passes to a TAFKAL80ETC concert"
+
+    @staticmethod
+    def _sulfuras(item: Item) -> bool:
+        return item.name == "Sulfuras, Hand of Ragnaros"
 
     @staticmethod
     def _quality_to_zero(item):
