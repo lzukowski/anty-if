@@ -17,10 +17,11 @@ class GildedRose:
 
     def update_quality(self) -> None:
         for item in self.items:
-            if not self._aged_brie(item) and not self._backstage_pass(item):
+            if self._sulfuras(item):
+                pass
+            elif self._generic(item):
                 if self._quality_more_then_0(item):
-                    if not self._sulfuras(item):
-                        self._decrease_quality(item)
+                    self._decrease_quality(item)
             else:
                 if self._quality_less_than_50(item):
                     self._increase_quality(item)
@@ -44,6 +45,14 @@ class GildedRose:
                 else:
                     if self._quality_less_than_50(item):
                         self._increase_quality(item)
+
+    @staticmethod
+    def _generic(item: Item) -> bool:
+        return not (
+            GildedRose._aged_brie(item)
+            or GildedRose._backstage_pass(item)
+            or GildedRose._sulfuras(item)
+        )
 
     @staticmethod
     def _aged_brie(item: Item) -> bool:
