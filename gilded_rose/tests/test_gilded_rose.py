@@ -84,3 +84,37 @@ class AgedBrieTest(unittest.TestCase):
 
         self.gilded_rose.update_quality()
         self.assertEqual(self.item.quality, max_quality)
+
+
+class BackstagePassesTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.item = Item(
+            'Backstage passes to a TAFKAL80ETC concert',
+            sell_in=15,
+            quality=20,
+        )
+        self.gilded_rose = GildedRose([self.item])
+
+    def test_increase_quality_when_day_passes(self):
+        yesterday_quality = self.item.quality
+        self.gilded_rose.update_quality()
+        self.assertEqual(self.item.quality, yesterday_quality + 1)
+
+    def test_quality_increases_by_2_when_10_days_left_to_sell(self):
+        self.item.sell_in = 10
+        yesterday_quality = self.item.quality
+
+        self.gilded_rose.update_quality()
+        self.assertEqual(self.item.quality, yesterday_quality + 2)
+
+    def test_quality_increases_by_3_when_5_days_left_to_sell(self):
+        self.item.sell_in = 5
+        yesterday_quality = self.item.quality
+
+        self.gilded_rose.update_quality()
+        self.assertEqual(self.item.quality, yesterday_quality + 3)
+
+    def test_quality_drops_to_0_when_day_after_sell_in_passes(self):
+        self.item.sell_in = 0
+        self.gilded_rose.update_quality()
+        self.assertEqual(self.item.quality, 0)
