@@ -118,3 +118,25 @@ class BackstagePassesTest(unittest.TestCase):
         self.item.sell_in = 0
         self.gilded_rose.update_quality()
         self.assertEqual(self.item.quality, 0)
+
+
+class SulfurasTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.item = Item('Sulfuras, Hand of Ragnaros', sell_in=2, quality=80)
+        self.gilded_rose = GildedRose([self.item])
+
+    def test_never_sold_out_or_decreases_quality(self):
+        sell_in = self.item.sell_in
+        quality = self.item.quality
+
+        self.gilded_rose.update_quality()
+        self.assertEqual(self.item.sell_in, sell_in)
+        self.assertEqual(self.item.quality, quality)
+
+        self.gilded_rose.update_quality()
+        self.assertEqual(self.item.sell_in, sell_in)
+        self.assertEqual(self.item.quality, quality)
+
+        self.gilded_rose.update_quality()
+        self.assertEqual(self.item.sell_in, sell_in)
+        self.assertEqual(self.item.quality, quality)
