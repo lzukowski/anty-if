@@ -1,5 +1,5 @@
 [pylint]
-disable = C0114,C0115,C0116
+disable = C0114,C0115,C0116,R1702,R0912,R0903
 ignore-missing-module-docstring = yes
 max-line-length=80
 expected-line-ending-format=LF
