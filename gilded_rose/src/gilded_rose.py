@@ -17,21 +17,14 @@ class GildedRose:
 
     def update_quality(self) -> None:
         for item in self.items:
-            if self._sulfuras(item):
-                pass
-            elif self._generic(item):
+            if self._generic(item):
                 if self._quality_more_then_0(item):
                     self._decrease_quality(item)
-            else:
+            elif self._aged_brie(item):
                 if self._quality_less_than_50(item):
                     self._increase_quality(item)
-                    if self._backstage_pass(item):
-                        if item.sell_in < 11:
-                            if self._quality_less_than_50(item):
-                                self._increase_quality(item)
-                        if item.sell_in < 6:
-                            if self._quality_less_than_50(item):
-                                self._increase_quality(item)
+            elif self._backstage_pass(item):
+                self._handle_backstage_pass(item)
             if not self._sulfuras(item):
                 item.sell_in = item.sell_in - 1
             if item.sell_in < 0:
@@ -45,6 +38,16 @@ class GildedRose:
                 else:
                     if self._quality_less_than_50(item):
                         self._increase_quality(item)
+
+    def _handle_backstage_pass(self, item: Item) -> None:
+        if self._quality_less_than_50(item):
+            self._increase_quality(item)
+            if item.sell_in < 11:
+                if self._quality_less_than_50(item):
+                    self._increase_quality(item)
+            if item.sell_in < 6:
+                if self._quality_less_than_50(item):
+                    self._increase_quality(item)
 
     @staticmethod
     def _generic(item: Item) -> bool:
