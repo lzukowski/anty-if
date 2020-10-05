@@ -20,13 +20,13 @@ class GildedRose:
             if self._generic(item):
                 if self._quality_more_then_0(item):
                     self._decrease_quality(item)
+                item.sell_in = item.sell_in - 1
             elif self._aged_brie(item):
                 if self._quality_less_than_50(item):
                     self._increase_quality(item)
+                item.sell_in = item.sell_in - 1
             elif self._backstage_pass(item):
                 self._handle_backstage_pass(item)
-            if not self._sulfuras(item):
-                item.sell_in = item.sell_in - 1
             if item.sell_in < 0:
                 if not self._aged_brie(item):
                     if not self._backstage_pass(item):
@@ -48,6 +48,7 @@ class GildedRose:
             if item.sell_in < 6:
                 if self._quality_less_than_50(item):
                     self._increase_quality(item)
+        item.sell_in = item.sell_in - 1
 
     @staticmethod
     def _generic(item: Item) -> bool:
