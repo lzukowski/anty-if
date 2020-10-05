@@ -18,26 +18,29 @@ class GildedRose:
     def update_quality(self) -> None:
         for item in self.items:
             if self._generic(item):
-                if self._quality_more_then_0(item):
-                    self._decrease_quality(item)
-                item.sell_in = item.sell_in - 1
+                self._handle_generic(item)
             elif self._aged_brie(item):
-                if self._quality_less_than_50(item):
-                    self._increase_quality(item)
-                item.sell_in = item.sell_in - 1
+                self._handle_aged_brie(item)
             elif self._backstage_pass(item):
                 self._handle_backstage_pass(item)
-            if item.sell_in < 0:
-                if not self._aged_brie(item):
-                    if not self._backstage_pass(item):
-                        if self._quality_more_then_0(item):
-                            if not self._sulfuras(item):
-                                self._decrease_quality(item)
-                    else:
-                        self._quality_to_zero(item)
-                else:
-                    if self._quality_less_than_50(item):
-                        self._increase_quality(item)
+            else:
+                self._handle_sulfuras(item)
+
+    def _handle_generic(self, item: Item) -> None:
+        if self._quality_more_then_0(item):
+            self._decrease_quality(item)
+        item.sell_in = item.sell_in - 1
+        if item.sell_in < 0:
+            if self._quality_more_then_0(item):
+                self._decrease_quality(item)
+
+    def _handle_aged_brie(self, item: Item) -> None:
+        if self._quality_less_than_50(item):
+            self._increase_quality(item)
+        item.sell_in = item.sell_in - 1
+        if item.sell_in < 0:
+            if self._quality_less_than_50(item):
+                self._increase_quality(item)
 
     def _handle_backstage_pass(self, item: Item) -> None:
         if self._quality_less_than_50(item):
@@ -49,6 +52,11 @@ class GildedRose:
                 if self._quality_less_than_50(item):
                     self._increase_quality(item)
         item.sell_in = item.sell_in - 1
+        if item.sell_in < 0:
+            self._quality_to_zero(item)
+
+    def _handle_sulfuras(self, item: Item) -> None:
+        pass
 
     @staticmethod
     def _generic(item: Item) -> bool:
