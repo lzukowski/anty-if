@@ -1,9 +1,9 @@
-from typing import Union
+from abc import ABC, abstractmethod
 
 from .item import Item
 
 
-class Generic:
+class Good(ABC):
     quality: int
     sell_in: int
 
@@ -11,6 +11,12 @@ class Generic:
         self.quality = quality
         self.sell_in = sell_in
 
+    @abstractmethod
+    def update(self) -> None:
+        raise NotImplementedError
+
+
+class Generic(Good):
     def update(self) -> None:
         if self.quality > 0:
             self.quality = self.quality - 1
@@ -20,14 +26,7 @@ class Generic:
                 self.quality = self.quality - 1
 
 
-class AgedBrie:
-    quality: int
-    sell_in: int
-
-    def __init__(self, quality: int, sell_in: int) -> None:
-        self.quality = quality
-        self.sell_in = sell_in
-
+class AgedBrie(Good):
     def update(self) -> None:
         if self.quality < 50:
             self.quality = self.quality + 1
@@ -37,14 +36,7 @@ class AgedBrie:
                 self.quality = self.quality + 1
 
 
-class BackstagePass:
-    quality: int
-    sell_in: int
-
-    def __init__(self, quality: int, sell_in: int) -> None:
-        self.quality = quality
-        self.sell_in = sell_in
-
+class BackstagePass(Good):
     def update(self) -> None:
         if self.quality < 50:
             self.quality = self.quality + 1
@@ -59,22 +51,13 @@ class BackstagePass:
             self.quality = self.quality - self.quality
 
 
-class Sulfuras:
-    quality: int
-    sell_in: int
-
-    def __init__(self, quality: int, sell_in: int) -> None:
-        self.quality = quality
-        self.sell_in = sell_in
-
+class Sulfuras(Good):
     def update(self) -> None:
         pass
 
 
 class GoodCategory:
-    def build_for(
-            self, item: Item
-    ) -> Union[Generic, AgedBrie, BackstagePass, Sulfuras]:
+    def build_for(self, item: Item) -> Good:
         if self._sulfuras(item):
             return Sulfuras(item.quality, item.sell_in)
         if self._aged_brie(item):
