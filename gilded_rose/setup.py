@@ -1,10 +1,10 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 
 
 setup(
     name='gilded_rose',
     package_dir={'': 'src'},
-    py_modules=['gilded_rose'],
+    packages=find_packages(exclude=['tests*']),
     python_requires='>=3.7',
     zip_safe=True,
 )
