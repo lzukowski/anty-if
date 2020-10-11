@@ -1,4 +1,4 @@
-from typing import List, Text
+from typing import List, Text, Union
 
 
 class Item:
@@ -76,42 +76,41 @@ class GildedRose:
         def update(self) -> None:
             pass
 
+    class GoodCategory:
+        def build_for(
+                self, item: Item
+        ) -> Union[
+            'GildedRose.Generic',
+            'GildedRose.AgedBrie',
+            'GildedRose.BackstagePass',
+            'GildedRose.Sulfuras',
+        ]:
+            if self._sulfuras(item):
+                return GildedRose.Sulfuras(item.quality, item.sell_in)
+            elif self._aged_brie(item):
+                return GildedRose.AgedBrie(item.quality, item.sell_in)
+            elif self._backstage_pass(item):
+                return GildedRose.BackstagePass(item.quality, item.sell_in)
+            return GildedRose.Generic(item.quality, item.sell_in)
+
+        @staticmethod
+        def _aged_brie(item: Item) -> bool:
+            return item.name == "Aged Brie"
+
+        @staticmethod
+        def _backstage_pass(item: Item) -> bool:
+            return item.name == "Backstage passes to a TAFKAL80ETC concert"
+
+        @staticmethod
+        def _sulfuras(item: Item) -> bool:
+            return item.name == "Sulfuras, Hand of Ragnaros"
+
     def __init__(self, items: List[Item]) -> None:
         self.items = items
 
     def update_quality(self) -> None:
         for item in self.items:
-            if self._sulfuras(item):
-                sulfuras = GildedRose.Sulfuras(item.quality, item.sell_in)
-                sulfuras.update()
-                item.quality = sulfuras.quality
-                item.sell_in = sulfuras.sell_in
-            elif self._aged_brie(item):
-                aged_brie = GildedRose.AgedBrie(item.quality, item.sell_in)
-                aged_brie.update()
-                item.quality = aged_brie.quality
-                item.sell_in = aged_brie.sell_in
-            elif self._backstage_pass(item):
-                backstage_pass = GildedRose.BackstagePass(
-                    item.quality, item.sell_in,
-                )
-                backstage_pass.update()
-                item.quality = backstage_pass.quality
-                item.sell_in = backstage_pass.sell_in
-            else:
-                generic = GildedRose.Generic(item.quality, item.sell_in)
-                generic.update()
-                item.quality = generic.quality
-                item.sell_in = generic.sell_in
-
-    @staticmethod
-    def _aged_brie(item: Item) -> bool:
-        return item.name == "Aged Brie"
-
-    @staticmethod
-    def _backstage_pass(item: Item) -> bool:
-        return item.name == "Backstage passes to a TAFKAL80ETC concert"
-
-    @staticmethod
-    def _sulfuras(item: Item) -> bool:
-        return item.name == "Sulfuras, Hand of Ragnaros"
+            good = GildedRose.GoodCategory().build_for(item)
+            good.update()
+            item.quality = good.quality
+            item.sell_in = good.sell_in
