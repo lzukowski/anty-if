@@ -13,6 +13,10 @@ class Quality:
         if self.amount > 0:
             self.amount -= 1
 
+    def increase(self) -> None:
+        if self.amount < 50:
+            self.amount += 1
+
 
 class Generic:
     sell_in: int
@@ -33,20 +37,21 @@ class Generic:
 
 
 class AgedBrie:
-    quality: int
     sell_in: int
 
     def __init__(self, quality: int, sell_in: int) -> None:
-        self.quality = quality
+        self._quality = Quality(quality)
         self.sell_in = sell_in
 
+    @property
+    def quality(self) -> int:
+        return self._quality.amount
+
     def update(self) -> None:
-        if self.quality < 50:
-            self.quality = self.quality + 1
+        self._quality.increase()
         self.sell_in = self.sell_in - 1
         if self.sell_in < 0:
-            if self.quality < 50:
-                self.quality = self.quality + 1
+            self._quality.increase()
 
 
 class BackstagePass:
