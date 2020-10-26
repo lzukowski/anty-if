@@ -83,24 +83,8 @@ class BackstagePass:
             self._quality.reset()
 
 
-class Sulfuras:
-    quality: int
-    sell_in: int
-
-    def __init__(self, quality: int, sell_in: int) -> None:
-        self.quality = quality
-        self.sell_in = sell_in
-
-    def update(self) -> None:
-        pass
-
-
 class GoodCategory:
-    def build_for(
-            self, item: Item
-    ) -> Union[Generic, AgedBrie, BackstagePass, Sulfuras]:
-        if self._sulfuras(item):
-            return Sulfuras(item.quality, item.sell_in)
+    def build_for(self, item: Item) -> Union[Generic, AgedBrie, BackstagePass]:
         if self._aged_brie(item):
             return AgedBrie(item.quality, item.sell_in)
         if self._backstage_pass(item):
@@ -114,7 +98,3 @@ class GoodCategory:
     @staticmethod
     def _backstage_pass(item: Item) -> bool:
         return item.name == "Backstage passes to a TAFKAL80ETC concert"
-
-    @staticmethod
-    def _sulfuras(item: Item) -> bool:
-        return item.name == "Sulfuras, Hand of Ragnaros"
