@@ -30,6 +30,7 @@ class GildedRoseTest(unittest.TestCase):
 
     def test_aged_brie(self):
         self.assert_aged_brie_quality(expected=22, sell_in=0, quality=20)
+        self.assert_aged_brie_quality(expected=21, sell_in=1, quality=20)
 
     def assert_aged_brie_quality(self, expected, sell_in, quality):
         item = Item("Aged Brie", sell_in=sell_in, quality=quality)
