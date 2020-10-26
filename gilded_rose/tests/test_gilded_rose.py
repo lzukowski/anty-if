@@ -13,6 +13,12 @@ class GildedRoseTest(unittest.TestCase):
         self.assert_backstage_pass_quality(expected=22, sell_in=8, quality=20)
         self.assert_backstage_pass_quality(expected=23, sell_in=4, quality=20)
         self.assert_backstage_pass_quality(expected=0, sell_in=0, quality=20)
+        self.assert_backstage_pass_quality(expected=23, sell_in=1, quality=20)
+        self.assert_backstage_pass_quality(expected=22, sell_in=6, quality=20)
+        self.assert_backstage_pass_quality(expected=23, sell_in=5, quality=20)
+        self.assert_backstage_pass_quality(expected=22, sell_in=10, quality=20)
+        self.assert_backstage_pass_quality(expected=21, sell_in=11, quality=20)
+        self.assert_backstage_pass_quality(expected=51, sell_in=11, quality=51)
 
     def assert_backstage_pass_quality(self, expected, sell_in, quality):
         item = Item(
