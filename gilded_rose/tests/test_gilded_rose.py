@@ -5,9 +5,17 @@ from gilded_rose import GildedRose, Item
 
 class GildedRoseTest(unittest.TestCase):
     def test_generic(self):
-        item = Item("foo", sell_in=0, quality=0)
+        self.assert_generic_quality(expected=0, sell_in=0, quality=0)
+        self.assert_generic_quality(expected=-1, sell_in=0, quality=-1)
+        self.assert_generic_quality(expected=1, sell_in=-1, quality=3)
+        self.assert_generic_quality(expected=1, sell_in=0, quality=3)
+        self.assert_generic_quality(expected=0, sell_in=0, quality=1)
+        self.assert_generic_quality(expected=9, sell_in=1, quality=10)
+
+    def assert_generic_quality(self, expected, sell_in, quality):
+        item = Item("foo", sell_in=sell_in, quality=quality)
         GildedRose([item]).update_quality()
-        self.assertEqual("foo", item.name)
+        self.assertEqual(expected, item.quality)
 
     def test_backstage_pass(self):
         self.assert_backstage_pass_quality(expected=22, sell_in=8, quality=20)
