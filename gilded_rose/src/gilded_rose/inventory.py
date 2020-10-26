@@ -20,9 +20,6 @@ class Quality:
     def reset(self) -> None:
         self.amount = 0
 
-    def less_then_50(self):
-        return self.amount < 50
-
 
 class Generic:
     sell_in: int
@@ -73,11 +70,10 @@ class BackstagePass:
 
     def update(self) -> None:
         self._quality.increase()
-        if self._quality.less_then_50():
-            if self.sell_in < 11:
-                self._quality.increase()
-            if self.sell_in < 6:
-                self._quality.increase()
+        if self.sell_in < 11:
+            self._quality.increase()
+        if self.sell_in < 6:
+            self._quality.increase()
         self.sell_in = self.sell_in - 1
         if self.sell_in < 0:
             self._quality.reset()
