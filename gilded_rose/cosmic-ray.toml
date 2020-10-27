@@ -1,0 +1,13 @@
+[cosmic-ray]
+module-path = "src/gilded_rose"
+python-version = "3.8"
+timeout = 5.0
+excluded-modules = []
+test-command = "python setup.py test"
+
+[cosmic-ray.execution-engine]
+name = "local"
+
+[cosmic-ray.cloning]
+method='copy'
+commands = []

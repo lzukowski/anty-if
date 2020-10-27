@@ -29,6 +29,11 @@ jobs:
           cd gilded_rose
           tox -e py${{ matrix.python-version }}
 
+      - name: Mutation Tests
+        run: |
+          cd gilded_rose
+          tox -e cosmic_ray
+
       - name: CodeStyle
         run: |
           cd gilded_rose
