@@ -9,7 +9,7 @@ class Quality:
     def __init__(self, amount: int) -> None:
         self.amount = amount
 
-    def decrease(self) -> None:
+    def degrade(self) -> None:
         if self.amount > 0:
             self.amount -= 1
 
@@ -25,18 +25,39 @@ class Generic:
     class Expired:
         @staticmethod
         def update(quality: Quality) -> None:
-            quality.decrease()
-            quality.decrease()
+            quality.degrade()
+            quality.degrade()
 
     @staticmethod
     def update(quality: Quality) -> None:
-        quality.decrease()
+        quality.degrade()
 
     @classmethod
     def build(cls, sell_in: int) -> Union['Generic', Expired]:
         if sell_in < 0:
             return Generic.Expired()
         return Generic()
+
+
+class Conjured:
+    class Expired:
+        @staticmethod
+        def update(quality: Quality) -> None:
+            quality.degrade()
+            quality.degrade()
+            quality.degrade()
+            quality.degrade()
+
+    @staticmethod
+    def update(quality: Quality) -> None:
+        quality.degrade()
+        quality.degrade()
+
+    @classmethod
+    def build(cls, sell_in: int) -> Union['Conjured', Expired]:
+        if sell_in < 0:
+            return cls.Expired()
+        return cls()
 
 
 class AgedBrie:
@@ -94,17 +115,14 @@ class BackstagePass:
 
 
 class GoodCategory:
-    def build_for(self, item: Item) -> Union[Generic, AgedBrie, BackstagePass]:
-        if self._aged_brie(item):
+    @staticmethod
+    def build_for(
+            item: Item,
+    ) -> Union[Generic, Conjured, AgedBrie, BackstagePass]:
+        if item.name == "Aged Brie":
             return AgedBrie.build(item.sell_in)
-        if self._backstage_pass(item):
+        if item.name == "Conjured Mana Cake":
+            return Conjured.build(item.sell_in)
+        if item.name == "Backstage passes to a TAFKAL80ETC concert":
             return BackstagePass.build(item.sell_in)
         return Generic.build(item.sell_in)
-
-    @staticmethod
-    def _aged_brie(item: Item) -> bool:
-        return item.name == "Aged Brie"
-
-    @staticmethod
-    def _backstage_pass(item: Item) -> bool:
-        return item.name == "Backstage passes to a TAFKAL80ETC concert"
