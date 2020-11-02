@@ -9,7 +9,7 @@ class Quality:
     def __init__(self, amount: int) -> None:
         self.amount = amount
 
-    def decrease(self) -> None:
+    def degrade(self) -> None:
         if self.amount > 0:
             self.amount -= 1
 
@@ -25,12 +25,12 @@ class Generic:
     class Expired:
         @staticmethod
         def update(quality: Quality) -> None:
-            quality.decrease()
-            quality.decrease()
+            quality.degrade()
+            quality.degrade()
 
     @staticmethod
     def update(quality: Quality) -> None:
-        quality.decrease()
+        quality.degrade()
 
     @classmethod
     def build(cls, sell_in: int) -> Union['Generic', Expired]:
