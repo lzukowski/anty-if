@@ -22,70 +22,84 @@ class Quality:
 
 
 class Generic:
-    sell_in: int
+    class Expired:
+        @staticmethod
+        def update(quality: Quality) -> None:
+            quality.decrease()
+            quality.decrease()
 
-    def __init__(self, quality: int, sell_in: int) -> None:
-        self._quality = Quality(quality)
-        self.sell_in = sell_in
+    @staticmethod
+    def update(quality: Quality) -> None:
+        quality.decrease()
 
-    @property
-    def quality(self) -> int:
-        return self._quality.amount
-
-    def update(self) -> None:
-        self._quality.decrease()
-        self.sell_in = self.sell_in - 1
-        if self.sell_in < 0:
-            self._quality.decrease()
+    @classmethod
+    def build(cls, sell_in: int) -> Union['Generic', Expired]:
+        if sell_in < 0:
+            return Generic.Expired()
+        return Generic()
 
 
 class AgedBrie:
-    sell_in: int
+    class Expired:
+        @staticmethod
+        def update(quality: Quality) -> None:
+            quality.increase()
+            quality.increase()
 
-    def __init__(self, quality: int, sell_in: int) -> None:
-        self._quality = Quality(quality)
-        self.sell_in = sell_in
+    @staticmethod
+    def update(quality: Quality) -> None:
+        quality.increase()
 
-    @property
-    def quality(self) -> int:
-        return self._quality.amount
-
-    def update(self) -> None:
-        self._quality.increase()
-        self.sell_in = self.sell_in - 1
-        if self.sell_in < 0:
-            self._quality.increase()
+    @classmethod
+    def build(cls, sell_in: int) -> Union['AgedBrie', Expired]:
+        if sell_in < 0:
+            return AgedBrie.Expired()
+        return AgedBrie()
 
 
 class BackstagePass:
-    sell_in: int
+    class Expired:
+        @staticmethod
+        def update(quality: Quality) -> None:
+            quality.reset()
 
-    def __init__(self, quality: int, sell_in: int) -> None:
-        self._quality = Quality(quality)
-        self.sell_in = sell_in
+    class LessThan5Days:
+        @staticmethod
+        def update(quality: Quality) -> None:
+            quality.increase()
+            quality.increase()
+            quality.increase()
 
-    @property
-    def quality(self) -> int:
-        return self._quality.amount
+    class LessThan10Days:
+        @staticmethod
+        def update(quality: Quality) -> None:
+            quality.increase()
+            quality.increase()
 
-    def update(self) -> None:
-        self._quality.increase()
-        if self.sell_in < 11:
-            self._quality.increase()
-        if self.sell_in < 6:
-            self._quality.increase()
-        self.sell_in = self.sell_in - 1
-        if self.sell_in < 0:
-            self._quality.reset()
+    @staticmethod
+    def update(quality: Quality) -> None:
+        quality.increase()
+
+    @classmethod
+    def build(cls, sell_in: int) -> Union[
+        'BackstagePass', Expired, LessThan5Days, LessThan10Days,
+    ]:
+        if sell_in < 0:
+            return BackstagePass.Expired()
+        if sell_in < 5:
+            return BackstagePass.LessThan5Days()
+        if sell_in < 10:
+            return BackstagePass.LessThan10Days()
+        return BackstagePass()
 
 
 class GoodCategory:
     def build_for(self, item: Item) -> Union[Generic, AgedBrie, BackstagePass]:
         if self._aged_brie(item):
-            return AgedBrie(item.quality, item.sell_in)
+            return AgedBrie.build(item.sell_in)
         if self._backstage_pass(item):
-            return BackstagePass(item.quality, item.sell_in)
-        return Generic(item.quality, item.sell_in)
+            return BackstagePass.build(item.sell_in)
+        return Generic.build(item.sell_in)
 
     @staticmethod
     def _aged_brie(item: Item) -> bool:
