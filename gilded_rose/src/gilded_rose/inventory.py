@@ -63,18 +63,33 @@ class BackstagePass:
         def update(quality: Quality, _: int) -> None:
             quality.reset()
 
-    @staticmethod
-    def update(quality: Quality, sell_in: int) -> None:
-        quality.increase()
-        if sell_in < 10:
+    class LessThan5Days:
+        @staticmethod
+        def update(quality: Quality, _: int) -> None:
             quality.increase()
-        if sell_in < 5:
+            quality.increase()
             quality.increase()
 
+    class LessThan10Days:
+        @staticmethod
+        def update(quality: Quality, _: int) -> None:
+            quality.increase()
+            quality.increase()
+
+    @staticmethod
+    def update(quality: Quality, _: int) -> None:
+        quality.increase()
+
     @classmethod
-    def build(cls, sell_in: int) -> Union['BackstagePass', Expired]:
+    def build(cls, sell_in: int) -> Union[
+        'BackstagePass', Expired, LessThan5Days, LessThan10Days,
+    ]:
         if sell_in < 0:
             return BackstagePass.Expired()
+        if sell_in < 5:
+            return BackstagePass.LessThan5Days()
+        if sell_in < 10:
+            return BackstagePass.LessThan10Days()
         return BackstagePass()
 
 
