@@ -24,12 +24,12 @@ class Quality:
 class Generic:
     class Expired:
         @staticmethod
-        def update(quality: Quality, _: int) -> None:
+        def update(quality: Quality) -> None:
             quality.decrease()
             quality.decrease()
 
     @staticmethod
-    def update(quality: Quality, _: int) -> None:
+    def update(quality: Quality) -> None:
         quality.decrease()
 
     @classmethod
@@ -42,12 +42,12 @@ class Generic:
 class AgedBrie:
     class Expired:
         @staticmethod
-        def update(quality: Quality, _: int) -> None:
+        def update(quality: Quality) -> None:
             quality.increase()
             quality.increase()
 
     @staticmethod
-    def update(quality: Quality, _: int) -> None:
+    def update(quality: Quality) -> None:
         quality.increase()
 
     @classmethod
@@ -60,24 +60,24 @@ class AgedBrie:
 class BackstagePass:
     class Expired:
         @staticmethod
-        def update(quality: Quality, _: int) -> None:
+        def update(quality: Quality) -> None:
             quality.reset()
 
     class LessThan5Days:
         @staticmethod
-        def update(quality: Quality, _: int) -> None:
+        def update(quality: Quality) -> None:
             quality.increase()
             quality.increase()
             quality.increase()
 
     class LessThan10Days:
         @staticmethod
-        def update(quality: Quality, _: int) -> None:
+        def update(quality: Quality) -> None:
             quality.increase()
             quality.increase()
 
     @staticmethod
-    def update(quality: Quality, _: int) -> None:
+    def update(quality: Quality) -> None:
         quality.increase()
 
     @classmethod
