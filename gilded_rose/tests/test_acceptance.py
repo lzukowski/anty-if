@@ -14,6 +14,7 @@ class AcceptanceTests(unittest.TestCase):
             'Backstage passes to a TAFKAL80ETC concert, 15, 20',
             'Backstage passes to a TAFKAL80ETC concert, 10, 49',
             'Backstage passes to a TAFKAL80ETC concert, 5, 49',
+            'Conjured Mana Cake, 3, 6',
         ],
         1: [
             '+5 Dexterity Vest, 9, 19',
@@ -24,6 +25,7 @@ class AcceptanceTests(unittest.TestCase):
             'Backstage passes to a TAFKAL80ETC concert, 14, 21',
             'Backstage passes to a TAFKAL80ETC concert, 9, 50',
             'Backstage passes to a TAFKAL80ETC concert, 4, 50',
+            'Conjured Mana Cake, 2, 4',
         ],
     }
 
@@ -49,6 +51,7 @@ class AcceptanceTests(unittest.TestCase):
                 sell_in=5,
                 quality=49,
             ),
+            Item(name='Conjured Mana Cake', sell_in=3, quality=6),
         ]
         self.gilded_rose = GildedRose(self.items)
 

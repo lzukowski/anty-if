@@ -17,6 +17,19 @@ class GildedRoseTest(unittest.TestCase):
         GildedRose([item]).update_quality()
         self.assertEqual(expected, item.quality)
 
+    def test_conjured(self):
+        self.assert_conjured_quality(expected=0, sell_in=0, quality=0)
+        self.assert_conjured_quality(expected=-1, sell_in=0, quality=-1)
+        self.assert_conjured_quality(expected=0, sell_in=-1, quality=3)
+        self.assert_conjured_quality(expected=0, sell_in=0, quality=3)
+        self.assert_conjured_quality(expected=0, sell_in=0, quality=1)
+        self.assert_conjured_quality(expected=8, sell_in=1, quality=10)
+
+    def assert_conjured_quality(self, expected, sell_in, quality):
+        item = Item("Conjured Mana Cake", sell_in=sell_in, quality=quality)
+        GildedRose([item]).update_quality()
+        self.assertEqual(expected, item.quality)
+
     def test_backstage_pass(self):
         self.assert_backstage_pass_quality(expected=22, sell_in=8, quality=20)
         self.assert_backstage_pass_quality(expected=23, sell_in=4, quality=20)

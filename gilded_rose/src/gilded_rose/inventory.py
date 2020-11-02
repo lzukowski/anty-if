@@ -39,6 +39,27 @@ class Generic:
         return Generic()
 
 
+class Conjured:
+    class Expired:
+        @staticmethod
+        def update(quality: Quality) -> None:
+            quality.degrade()
+            quality.degrade()
+            quality.degrade()
+            quality.degrade()
+
+    @staticmethod
+    def update(quality: Quality) -> None:
+        quality.degrade()
+        quality.degrade()
+
+    @classmethod
+    def build(cls, sell_in: int) -> Union['Conjured', Expired]:
+        if sell_in < 0:
+            return cls.Expired()
+        return cls()
+
+
 class AgedBrie:
     class Expired:
         @staticmethod
@@ -95,9 +116,13 @@ class BackstagePass:
 
 class GoodCategory:
     @staticmethod
-    def build_for(item: Item) -> Union[Generic, AgedBrie, BackstagePass]:
+    def build_for(
+            item: Item,
+    ) -> Union[Generic, Conjured, AgedBrie, BackstagePass]:
         if item.name == "Aged Brie":
             return AgedBrie.build(item.sell_in)
+        if item.name == "Conjured Mana Cake":
+            return Conjured.build(item.sell_in)
         if item.name == "Backstage passes to a TAFKAL80ETC concert":
             return BackstagePass.build(item.sell_in)
         return Generic.build(item.sell_in)
