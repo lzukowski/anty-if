@@ -1,6 +1,6 @@
 from typing import List
 
-from .inventory import GoodCategory
+from .inventory import GoodCategory, Quality
 from .item import Item
 
 
@@ -13,9 +13,10 @@ class GildedRose:
             if self._sulfuras(item):
                 continue
             item.sell_in -= 1
-            good = GoodCategory().build_for(item)
+            quality = Quality(item.quality)
+            good = GoodCategory().build_for(item, quality)
             good.update(item.sell_in)
-            item.quality = good.quality
+            item.quality = quality.amount
 
     @staticmethod
     def _sulfuras(item: Item) -> bool:

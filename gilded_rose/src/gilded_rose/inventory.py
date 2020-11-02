@@ -22,58 +22,48 @@ class Quality:
 
 
 class Generic:
-    def __init__(self, quality: int) -> None:
-        self._quality = Quality(quality)
-
-    @property
-    def quality(self) -> int:
-        return self._quality.amount
+    def __init__(self, quality: Quality) -> None:
+        self.quality = quality
 
     def update(self, sell_in: int) -> None:
-        self._quality.decrease()
+        self.quality.decrease()
         if sell_in < 0:
-            self._quality.decrease()
+            self.quality.decrease()
 
 
 class AgedBrie:
-    def __init__(self, quality: int) -> None:
-        self._quality = Quality(quality)
-
-    @property
-    def quality(self) -> int:
-        return self._quality.amount
+    def __init__(self, quality: Quality) -> None:
+        self.quality = quality
 
     def update(self, sell_in: int) -> None:
-        self._quality.increase()
+        self.quality.increase()
         if sell_in < 0:
-            self._quality.increase()
+            self.quality.increase()
 
 
 class BackstagePass:
-    def __init__(self, quality: int) -> None:
-        self._quality = Quality(quality)
-
-    @property
-    def quality(self) -> int:
-        return self._quality.amount
+    def __init__(self, quality: Quality) -> None:
+        self.quality = quality
 
     def update(self, sell_in: int) -> None:
-        self._quality.increase()
+        self.quality.increase()
         if sell_in < 10:
-            self._quality.increase()
+            self.quality.increase()
         if sell_in < 5:
-            self._quality.increase()
+            self.quality.increase()
         if sell_in < 0:
-            self._quality.reset()
+            self.quality.reset()
 
 
 class GoodCategory:
-    def build_for(self, item: Item) -> Union[Generic, AgedBrie, BackstagePass]:
+    def build_for(
+            self, item: Item, quality: Quality,
+    ) -> Union[Generic, AgedBrie, BackstagePass]:
         if self._aged_brie(item):
-            return AgedBrie(item.quality)
+            return AgedBrie(quality)
         if self._backstage_pass(item):
-            return BackstagePass(item.quality)
-        return Generic(item.quality)
+            return BackstagePass(quality)
+        return Generic(quality)
 
     @staticmethod
     def _aged_brie(item: Item) -> bool:
