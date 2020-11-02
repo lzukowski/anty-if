@@ -14,8 +14,8 @@ class GildedRose:
                 continue
             item.sell_in -= 1
             quality = Quality(item.quality)
-            good = GoodCategory().build_for(item, quality)
-            good.update(item.sell_in)
+            good = GoodCategory().build_for(item)
+            good.update(quality, item.sell_in)
             item.quality = quality.amount
 
     @staticmethod
