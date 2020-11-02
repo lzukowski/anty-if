@@ -94,17 +94,10 @@ class BackstagePass:
 
 
 class GoodCategory:
-    def build_for(self, item: Item) -> Union[Generic, AgedBrie, BackstagePass]:
-        if self._aged_brie(item):
+    @staticmethod
+    def build_for(item: Item) -> Union[Generic, AgedBrie, BackstagePass]:
+        if item.name == "Aged Brie":
             return AgedBrie.build(item.sell_in)
-        if self._backstage_pass(item):
+        if item.name == "Backstage passes to a TAFKAL80ETC concert":
             return BackstagePass.build(item.sell_in)
         return Generic.build(item.sell_in)
-
-    @staticmethod
-    def _aged_brie(item: Item) -> bool:
-        return item.name == "Aged Brie"
-
-    @staticmethod
-    def _backstage_pass(item: Item) -> bool:
-        return item.name == "Backstage passes to a TAFKAL80ETC concert"
