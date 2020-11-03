@@ -1,4 +1,4 @@
-from typing import Union
+from abc import ABC, abstractmethod
 
 from .item import Item
 
@@ -21,90 +21,84 @@ class Quality:
         self.amount = 0
 
 
-class Generic:
-    class Expired:
-        @staticmethod
-        def update(quality: Quality) -> None:
+class Good(ABC):
+    @abstractmethod  # pragma: no mutate
+    def update(self, quality: Quality) -> None:
+        raise NotImplementedError
+
+
+class Generic(Good):
+    class Expired(Good):
+        def update(self, quality: Quality) -> None:
             quality.degrade()
             quality.degrade()
 
-    @staticmethod
-    def update(quality: Quality) -> None:
+    def update(self, quality: Quality) -> None:
         quality.degrade()
 
     @classmethod
-    def build(cls, sell_in: int) -> Union['Generic', Expired]:
+    def build(cls, sell_in: int) -> Good:
         if sell_in < 0:
             return Generic.Expired()
         return Generic()
 
 
-class Conjured:
-    class Expired:
-        @staticmethod
-        def update(quality: Quality) -> None:
+class Conjured(Good):
+    class Expired(Good):
+        def update(self, quality: Quality) -> None:
             quality.degrade()
             quality.degrade()
             quality.degrade()
             quality.degrade()
 
-    @staticmethod
-    def update(quality: Quality) -> None:
+    def update(self, quality: Quality) -> None:
         quality.degrade()
         quality.degrade()
 
     @classmethod
-    def build(cls, sell_in: int) -> Union['Conjured', Expired]:
+    def build(cls, sell_in: int) -> Good:
         if sell_in < 0:
             return cls.Expired()
         return cls()
 
 
-class AgedBrie:
-    class Expired:
-        @staticmethod
-        def update(quality: Quality) -> None:
+class AgedBrie(Good):
+    class Expired(Good):
+        def update(self, quality: Quality) -> None:
             quality.increase()
             quality.increase()
 
-    @staticmethod
-    def update(quality: Quality) -> None:
+    def update(self, quality: Quality) -> None:
         quality.increase()
 
     @classmethod
-    def build(cls, sell_in: int) -> Union['AgedBrie', Expired]:
+    def build(cls, sell_in: int) -> Good:
         if sell_in < 0:
             return AgedBrie.Expired()
         return AgedBrie()
 
 
-class BackstagePass:
-    class Expired:
-        @staticmethod
-        def update(quality: Quality) -> None:
+class BackstagePass(Good):
+    class Expired(Good):
+        def update(self, quality: Quality) -> None:
             quality.reset()
 
-    class LessThan5Days:
-        @staticmethod
-        def update(quality: Quality) -> None:
+    class LessThan5Days(Good):
+        def update(self, quality: Quality) -> None:
             quality.increase()
             quality.increase()
             quality.increase()
 
-    class LessThan10Days:
-        @staticmethod
-        def update(quality: Quality) -> None:
+    class LessThan10Days(Good):
+        def update(self, quality: Quality) -> None:
             quality.increase()
             quality.increase()
 
-    @staticmethod
-    def update(quality: Quality) -> None:
+    def update(self, quality: Quality) -> None:
         quality.increase()
 
     @classmethod
-    def build(cls, sell_in: int) -> Union[
-        'BackstagePass', Expired, LessThan5Days, LessThan10Days,
-    ]:
+    def build(cls, sell_in: int) -> Good:
         if sell_in < 0:
             return BackstagePass.Expired()
         if sell_in < 5:
@@ -116,9 +110,7 @@ class BackstagePass:
 
 class GoodCategory:
     @staticmethod
-    def build_for(
-            item: Item,
-    ) -> Union[Generic, Conjured, AgedBrie, BackstagePass]:
+    def build_for(item: Item) -> Good:
         if item.name == "Aged Brie":
             return AgedBrie.build(item.sell_in)
         if item.name == "Conjured Mana Cake":
