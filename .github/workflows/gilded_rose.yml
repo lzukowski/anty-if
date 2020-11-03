@@ -31,6 +31,13 @@ jobs:
         run: |
           tox -e cosmic_ray
 
+      - name: Archive mutation raport
+        uses: actions/upload-artifact@v2
+        with:
+          name: mutation-report
+          path: report.html
+          retention-days: 1
+
       - name: CodeStyle
         run: |
           tox -e codestyle -e flake8 -e lint
