@@ -3,9 +3,9 @@ module-path = "src/gilded_rose"
 python-version = "3.8"
 timeout = 5.0
 excluded-modules = []
-test-command = "python setup.py test"
+test-command = "pytest"
 
-[cosmic-ray.execution-engine]
+[cosmic-ray.distributor]
 name = "local"
 
 [cosmic-ray.cloning]
